@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Birthday Laugh Lab</title>
+  <title>Birthday Giggle Generator</title>
   <style>
     * {
       box-sizing: border-box;
@@ -53,7 +53,7 @@
 
     .page-title {
       grid-column: 1 / 3;
-      text-align: center;
+      text-align: centre;
       margin-bottom: 8px;
       position: relative;
     }
@@ -79,7 +79,7 @@
 
     .badge {
       display: inline-flex;
-      align-items: center;
+      align-items: centre;
       gap: 6px;
       padding: 4px 10px;
       border-radius: 999px;
@@ -106,7 +106,7 @@
       margin: 0 0 14px;
       font-size: 18px;
       display: flex;
-      align-items: center;
+      align-items: centre;
       gap: 8px;
       color: #312e81;
     }
@@ -168,8 +168,8 @@
       font-size: 14px;
       font-weight: 600;
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      align-items: centre;
+      justify-content: centre;
       gap: 8px;
       background: linear-gradient(90deg, #ec4899, #f97316);
       color: white;
@@ -215,7 +215,7 @@
       font-size: 18px;
       color: #312e81;
       display: flex;
-      align-items: center;
+      align-items: centre;
       gap: 8px;
     }
 
@@ -270,8 +270,8 @@
     .card-left {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      align-items: centre;
+      justify-content: centre;
       padding: 6px;
       border-right: 0;
     }
@@ -284,7 +284,7 @@
     .card-left h3 {
       margin: 4px 0 0;
       font-size: 17px;
-      text-align: center;
+      text-align: centre;
       color: #b91c1c;
     }
 
@@ -314,13 +314,13 @@
       color: #6b21a8;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: centre;
       gap: 6px;
     }
 
     .meta span {
       display: inline-flex;
-      align-items: center;
+      align-items: centre;
       gap: 4px;
     }
 
@@ -369,7 +369,7 @@
       <div class="page-title">
         <h1>Birthday Giggle Generator</h1>
         <div class="subtitle">
-          Type in the details on the left and watch the birthday cards appear on the right
+          Type the details on the left and watch the birthday cards appear on the right
           <span class="emoji-sparkles">🎉✨</span>
         </div>
         <div class="badge">
@@ -386,205 +386,3 @@
             <input id="name" type="text" placeholder="Alex">
           </div>
 
-          <div class="field">
-            <label for="age">Age</label>
-            <input id="age" type="number" min="1" max="150" placeholder="21">
-          </div>
-
-          <div class="field">
-            <label for="hobby">Favourite hobby</label>
-            <input id="hobby" type="text" placeholder="Gardening, gaming, baking, dancing">
-          </div>
-
-          <div class="tips">
-            <span>Try unusual hobbies for extra fun</span>
-            <span>Add nicknames in the name box</span>
-          </div>
-
-          <button type="submit">
-            ✨ Create birthday card
-          </button>
-
-          <div class="small-print">
-            Your cards stay on the right, so you can pick your favourite message or copy a few.
-          </div>
-        </form>
-      </div>
-
-      <div class="panel">
-        <div class="cards-header">
-          <h2><span>📬</span>Your birthday cards</h2>
-          <div class="count" id="cardCount">No cards yet. Create the first one.</div>
-        </div>
-        <div class="cards-panel">
-          <div class="cards-container" id="cardsContainer">
-            <!-- cards appear here -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const form = document.getElementById("cardForm");
-    const cardsContainer = document.getElementById("cardsContainer");
-    const cardCount = document.getElementById("cardCount");
-    let cardNumber = 0;
-
-    function ordinal(n) {
-      const s = ["th", "st", "nd", "rd"];
-      const v = n % 100;
-      return n + (s[(v - 20) % 10] || s[v] || s[0]);
-    }
-
-    function generateMessage(name, age, hobby) {
-      const cleanName = name || "Birthday legend";
-      const cleanHobby = hobby || "being brilliant";
-
-      const lines = [];
-
-      if (age) {
-        lines.push(`Happy ${ordinal(age)} birthday, ${cleanName}!`);
-      } else {
-        lines.push(`Happy birthday, ${cleanName}!`);
-      }
-
-      const ageNum = Number(age);
-
-      if (!isNaN(ageNum)) {
-        if (ageNum < 18) {
-          lines.push(`You are officially old enough to stay up late but still young enough to blame sugar for everything.`);
-        } else if (ageNum < 30) {
-          lines.push(`At this point you should be really good at ${cleanHobby}. If not, just pretend you are, we will clap anyway.`);
-        } else if (ageNum < 50) {
-          lines.push(`You have reached the age where ${cleanHobby} counts as both exercise and self care. Two for one.`);
-        } else if (ageNum < 80) {
-          lines.push(`If anyone asks, your amazing skills in ${cleanHobby} are the reason you look this good at ${ageNum}.`);
-        } else {
-          lines.push(`At ${ageNum}, your dedication to ${cleanHobby} is the real secret to eternal awesomeness.`);
-        }
-      } else {
-        lines.push(`Today your ${cleanHobby} powers are automatically upgraded to legendary status.`);
-      }
-
-      const outroOptions = [
-        `May your cake be huge, your jokes be terrible and your ${cleanHobby} gear never go missing.`,
-        `If life gave out medals, you would get gold for ${cleanHobby} and silver for pretending to act grown up.`,
-        `Here is to another year of turning ${cleanHobby} into a full time personality trait.`,
-        `Remember, calories do not count today, especially when earned through intense ${cleanHobby}.`,
-        `Sending you all the good vibes and a lifetime supply of excuses to do more ${cleanHobby}.`
-      ];
-
-      const randomOutro = outroOptions[Math.floor(Math.random() * outroOptions.length)];
-      lines.push("");
-      lines.push(randomOutro);
-
-      return lines.join("
-");
-    }
-
-    function updateCardCount() {
-      if (cardNumber === 0) {
-        cardCount.textContent = "No cards yet. Create the first one.";
-      } else if (cardNumber === 1) {
-        cardCount.textContent = "1 card created. Keep stacking the laughs.";
-      } else {
-        cardCount.textContent = `${cardNumber} cards created and counting.`;
-      }
-    }
-
-    form.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const name = document.getElementById("name").value.trim();
-      const ageValue = document.getElementById("age").value.trim();
-      const hobby = document.getElementById("hobby").value.trim();
-
-      const age = ageValue ? parseInt(ageValue, 10) : null;
-
-      if (!name && !hobby && !age) {
-        alert("Please fill in at least one detail so I can create a fun message.");
-        return;
-      }
-
-      const message = generateMessage(name, age, hobby);
-
-      const wrapper = document.createElement("div");
-      wrapper.className = "card-wrapper";
-
-      const card = document.createElement("article");
-      card.className = "card";
-
-      const inner = document.createElement("div");
-      inner.className = "card-inner";
-
-      const left = document.createElement("div");
-      left.className = "card-left";
-
-      const balloons = document.createElement("div");
-      balloons.className = "balloons";
-      balloons.textContent = "🎈🎈🎈";
-
-      const heading = document.createElement("h3");
-      heading.textContent = name ? `To ${name}` : "To the birthday star";
-
-      const sub = document.createElement("p");
-      if (age) {
-        sub.textContent = `${ordinal(age)} lap round the sun`;
-      } else {
-        sub.textContent = "One more trip round the sun";
-      }
-
-      left.appendChild(balloons);
-      left.appendChild(heading);
-      left.appendChild(sub);
-
-      const right = document.createElement("div");
-      right.className = "card-right";
-
-      const msg = document.createElement("div");
-      msg.className = "message";
-      msg.textContent = message;
-
-      const meta = document.createElement("div");
-      meta.className = "meta";
-
-      const tag = document.createElement("span");
-      tag.className = "tag";
-      tag.textContent = `Card ${++cardNumber}`;
-
-      const hobbyInfo = document.createElement("span");
-      if (hobby) {
-        hobbyInfo.textContent = `Hobby: ${hobby}`;
-      } else {
-        hobbyInfo.textContent = "Custom birthday message";
-      }
-
-      meta.appendChild(tag);
-      meta.appendChild(hobbyInfo);
-
-      right.appendChild(msg);
-      right.appendChild(meta);
-
-      inner.appendChild(left);
-      inner.appendChild(right);
-
-      card.appendChild(inner);
-      wrapper.appendChild(card);
-
-      if (cardsContainer.firstChild) {
-        cardsContainer.insertBefore(wrapper, cardsContainer.firstChild);
-      } else {
-        cardsContainer.appendChild(wrapper);
-      }
-
-      updateCardCount();
-
-      form.reset();
-      document.getElementById("name").focus();
-    });
-
-    updateCardCount();
-  </script>
-</body>
-</html>
