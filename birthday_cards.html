@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Laugh Lab</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #ffe6ff, #fff5d9);
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+      padding: 24px 28px 28px;
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confetti {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 99, 132, 0.26) 0, transparent 52%),
+        radial-gradient(circle at 80% 0, rgba(54, 162, 235, 0.22) 0, transparent 52%),
+        radial-gradient(circle at 0 100%, rgba(255, 206, 86, 0.22) 0, transparent 52%);
+      opacity: 0.85;
+      mix-blend-mode: screen;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: contents;
+    }
+
+    .page-title {
+      grid-column: 1 / 3;
+      text-align: center;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 32px;
+      letter-spacing: 1px;
+      color: #3b0764;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .page-title .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #7c3aed;
+    }
+
+    .page-title .emoji-sparkles {
+      font-size: 18px;
+      margin-left: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(244, 114, 182, 0.12);
+      color: #9d174d;
+      font-size: 11px;
+      margin-top: 8px;
+    }
+
+    .badge span {
+      font-size: 14px;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 16px;
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #312e81;
+    }
+
+    .panel h2 span {
+      font-size: 20px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #4c1d95;
+    }
+
+    .field input {
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      padding: 8px 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 120ms ease, box-shadow 120ms ease, transform 80ms ease;
+      background: rgba(255, 255, 255, 0.96);
+    }
+
+    .field input:focus {
+      border-color: #f97316;
+      box-shadow: 0 0 0 2px rgba(248, 171, 81, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .tips {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #6b21a8;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tips span {
+      background: rgba(216, 180, 254, 0.25);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(90deg, #ec4899, #f97316);
+      color: white;
+      box-shadow: 0 10px 18px rgba(236, 72, 153, 0.45);
+      transition: transform 80ms ease, box-shadow 80ms ease, filter 80ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px) scale(1.01);
+      filter: brightness(1.05);
+      box-shadow: 0 12px 24px rgba(236, 72, 153, 0.55);
+    }
+
+    button:active {
+      transform: translateY(0) scale(0.99);
+      box-shadow: 0 5px 12px rgba(236, 72, 153, 0.4);
+    }
+
+    .small-print {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .cards-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 520px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .cards-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .cards-header h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #312e81;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cards-header h2 span {
+      font-size: 20px;
+    }
+
+    .cards-header .count {
+      font-size: 11px;
+      color: #6b21a8;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .card {
+      background: #fefce8;
+      border-radius: 14px;
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
+      padding: 14px;
+      width: 100%;
+      max-width: 430px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 48%;
+      width: 2px;
+      background: linear-gradient(to bottom, rgba(148, 163, 184, 0.1), rgba(148, 163, 184, 0.6), rgba(148, 163, 184, 0.1));
+      opacity: 0.7;
+    }
+
+    .card-inner {
+      display: grid;
+      grid-template-columns: 48% 52%;
+      gap: 10px;
+    }
+
+    .card-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      border-right: 0;
+    }
+
+    .balloons {
+      font-size: 26px;
+      margin-bottom: 4px;
+    }
+
+    .card-left h3 {
+      margin: 4px 0 0;
+      font-size: 17px;
+      text-align: center;
+      color: #b91c1c;
+    }
+
+    .card-left p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: #f97316;
+    }
+
+    .card-right {
+      padding: 4px 2px 2px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .message {
+      font-size: 14px;
+      line-height: 1.45;
+      color: #1f2933;
+      white-space: pre-wrap;
+    }
+
+    .meta {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #6b21a8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta .tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(252, 165, 165, 0.24);
+      color: #991b1b;
+      font-weight: 600;
+    }
+
+    @media (max-width: 840px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .page-title {
+        grid-column: 1 / 2;
+      }
+      .cards-panel {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card-inner {
+        grid-template-columns: 1fr;
+      }
+      .card::before {
+        display: none;
+      }
+      .card-left {
+        border-bottom: 1px dashed rgba(148, 163, 184, 0.8);
+        margin-bottom: 4px;
+      }
+      .card-right {
+        padding-left: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="confetti"></div>
+
+    <div class="content">
+      <div class="page-title">
+        <h1>Birthday Giggle Generator</h1>
+        <div class="subtitle">
+          Type in the details on the left and watch the birthday cards appear on the right
+          <span class="emoji-sparkles">🎉✨</span>
+        </div>
+        <div class="badge">
+          <span>🎂</span>
+          <span>Pun powered wishes for every age</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2><span>📝</span>Card builder</h2>
+        <form id="cardForm">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text" placeholder="Alex">
+          </div>
+
+          <div class="field">
+            <label for="age">Age</label>
+            <input id="age" type="number" min="1" max="150" placeholder="21">
+          </div>
+
+          <div class="field">
+            <label for="hobby">Favourite hobby</label>
+            <input id="hobby" type="text" placeholder="Gardening, gaming, baking, dancing">
+          </div>
+
+          <div class="tips">
+            <span>Try unusual hobbies for extra fun</span>
+            <span>Add nicknames in the name box</span>
+          </div>
+
+          <button type="submit">
+            ✨ Create birthday card
+          </button>
+
+          <div class="small-print">
+            Your cards stay on the right, so you can pick your favourite message or copy a few.
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="cards-header">
+          <h2><span>📬</span>Your birthday cards</h2>
+          <div class="count" id="cardCount">No cards yet. Create the first one.</div>
+        </div>
+        <div class="cards-panel">
+          <div class="cards-container" id="cardsContainer">
+            <!-- cards appear here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("cardForm");
+    const cardsContainer = document.getElementById("cardsContainer");
+    const cardCount = document.getElementById("cardCount");
+    let cardNumber = 0;
+
+    function ordinal(n) {
+      const s = ["th", "st", "nd", "rd"];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+
+    function generateMessage(name, age, hobby) {
+      const cleanName = name || "Birthday legend";
+      const cleanHobby = hobby || "being brilliant";
+
+      const lines = [];
+
+      if (age) {
+        lines.push(`Happy ${ordinal(age)} birthday, ${cleanName}!`);
+      } else {
+        lines.push(`Happy birthday, ${cleanName}!`);
+      }
+
+      const ageNum = Number(age);
+
+      if (!isNaN(ageNum)) {
+        if (ageNum < 18) {
+          lines.push(`You are officially old enough to stay up late but still young enough to blame sugar for everything.`);
+        } else if (ageNum < 30) {
+          lines.push(`At this point you should be really good at ${cleanHobby}. If not, just pretend you are, we will clap anyway.`);
+        } else if (ageNum < 50) {
+          lines.push(`You have reached the age where ${cleanHobby} counts as both exercise and self care. Two for one.`);
+        } else if (ageNum < 80) {
+          lines.push(`If anyone asks, your amazing skills in ${cleanHobby} are the reason you look this good at ${ageNum}.`);
+        } else {
+          lines.push(`At ${ageNum}, your dedication to ${cleanHobby} is the real secret to eternal awesomeness.`);
+        }
+      } else {
+        lines.push(`Today your ${cleanHobby} powers are automatically upgraded to legendary status.`);
+      }
+
+      const outroOptions = [
+        `May your cake be huge, your jokes be terrible and your ${cleanHobby} gear never go missing.`,
+        `If life gave out medals, you would get gold for ${cleanHobby} and silver for pretending to act grown up.`,
+        `Here is to another year of turning ${cleanHobby} into a full time personality trait.`,
+        `Remember, calories do not count today, especially when earned through intense ${cleanHobby}.`,
+        `Sending you all the good vibes and a lifetime supply of excuses to do more ${cleanHobby}.`
+      ];
+
+      const randomOutro = outroOptions[Math.floor(Math.random() * outroOptions.length)];
+      lines.push("");
+      lines.push(randomOutro);
+
+      return lines.join("
+");
+    }
+
+    function updateCardCount() {
+      if (cardNumber === 0) {
+        cardCount.textContent = "No cards yet. Create the first one.";
+      } else if (cardNumber === 1) {
+        cardCount.textContent = "1 card created. Keep stacking the laughs.";
+      } else {
+        cardCount.textContent = `${cardNumber} cards created and counting.`;
+      }
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const ageValue = document.getElementById("age").value.trim();
+      const hobby = document.getElementById("hobby").value.trim();
+
+      const age = ageValue ? parseInt(ageValue, 10) : null;
+
+      if (!name && !hobby && !age) {
+        alert("Please fill in at least one detail so I can create a fun message.");
+        return;
+      }
+
+      const message = generateMessage(name, age, hobby);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "card-wrapper";
+
+      const card = document.createElement("article");
+      card.className = "card";
+
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
+
+      const left = document.createElement("div");
+      left.className = "card-left";
+
+      const balloons = document.createElement("div");
+      balloons.className = "balloons";
+      balloons.textContent = "🎈🎈🎈";
+
+      const heading = document.createElement("h3");
+      heading.textContent = name ? `To ${name}` : "To the birthday star";
+
+      const sub = document.createElement("p");
+      if (age) {
+        sub.textContent = `${ordinal(age)} lap round the sun`;
+      } else {
+        sub.textContent = "One more trip round the sun";
+      }
+
+      left.appendChild(balloons);
+      left.appendChild(heading);
+      left.appendChild(sub);
+
+      const right = document.createElement("div");
+      right.className = "card-right";
+
+      const msg = document.createElement("div");
+      msg.className = "message";
+      msg.textContent = message;
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      tag.textContent = `Card ${++cardNumber}`;
+
+      const hobbyInfo = document.createElement("span");
+      if (hobby) {
+        hobbyInfo.textContent = `Hobby: ${hobby}`;
+      } else {
+        hobbyInfo.textContent = "Custom birthday message";
+      }
+
+      meta.appendChild(tag);
+      meta.appendChild(hobbyInfo);
+
+      right.appendChild(msg);
+      right.appendChild(meta);
+
+      inner.appendChild(left);
+      inner.appendChild(right);
+
+      card.appendChild(inner);
+      wrapper.appendChild(card);
+
+      if (cardsContainer.firstChild) {
+        cardsContainer.insertBefore(wrapper, cardsContainer.firstChild);
+      } else {
+        cardsContainer.appendChild(wrapper);
+      }
+
+      updateCardCount();
+
+      form.reset();
+      document.getElementById("name").focus();
+    });
+
+    updateCardCount();
+  </script>
+</body>
+</html>
